@@ -20,7 +20,7 @@ export const Leaderboard = () => {
     
     return(
         <div className = "m-2">
-            <h1 className="text-center text-5xl font-bold mb-4">Leaderboard</h1>
+            {leaderboard.length > 0 && <h1 className="text-center text-5xl font-bold mb-4">Top 10 Applicants</h1>}
             <div className="flex grid justify-items-center">
                 {leaderboard.map(applicant => (
                     <LeaderboardCard key={applicant._id} applicant = {applicant}/>

@@ -3,6 +3,15 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from collections import Counter
 import PyPDF2
+import filetype
+
+def is_pdf_file(file):
+    header = file.read(261)
+    file_type = filetype.guess(header)
+    if file_type is None or file_type.extension.lower() != 'pdf':
+        return False
+
+    return True
 
 def extract_text_from_pdf(file):
     text = ""

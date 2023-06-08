@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import  axios  from 'axios';
 import { useLeaderboardContext } from '../Hooks/useLeaderboardContext'
 
@@ -6,7 +6,8 @@ export const Form = () => {
     const { dispatch } = useLeaderboardContext();
     const [name,setName] = useState('');
     const [keywords,setKeywords] = useState('');
-    const [file,setFile] = useState('')
+    const [file,setFile] = useState('');
+    const [error, setError] = useState(null);
 
     const emptyFields = () => {
       setFile('')
@@ -16,6 +17,7 @@ export const Form = () => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
+        setError(null);
         const formData = new FormData();
         formData.append('name', name);
         formData.append('keywords', keywords);
@@ -33,6 +35,7 @@ export const Form = () => {
           })
           .catch(error => {
             console.error(error);
+            setError(error);
           });
       };
 
@@ -68,6 +71,7 @@ export const Form = () => {
                 file:py-3 file:px-4
                 dark:file:bg-gray-700 dark:file:text-gray-400"/>
             <p className='font-light pt-4'> Only PDFs allowed</p>
+            {error && (<p className='font-light pt-4 text-red-400'> The file you sent was not a PDF</p>)}
             </div>
           <div>
             <button
