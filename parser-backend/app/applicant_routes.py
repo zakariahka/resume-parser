@@ -1,30 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import request, jsonify
 from parse_functions import extract_text_from_pdf, extract_programming_keywords, resume_score_calc, process_keywords, is_pdf_file
-from pymongo import MongoClient
 from bson.json_util import dumps
-from flask_cors import CORS
-from dotenv import load_dotenv
-load_dotenv()
-import os
-
-app = Flask(__name__)
-CORS(app)
-
-connection_string = os.getenv("MONGODB_URI")
-client = MongoClient(connection_string)
-
-db = client['resume-parser-db']
-collection = db.applicants
+from app import app
+from app import collection
+from auth import require_auth
 
 @app.route('/add-applicant', methods=['POST'])
+@require_auth
 def add_applicant():
     #get the file and fields from the request
-    applicant_name = request.form["name"]
-    applicant_file = request.files["file"]
-    desired_keywords_string = request.form["keywords"]
+    applicant_name = request.form.get("name")
+    applicant_file = request.files.get("file")
+    desired_keywords_string = request.form.get("keywords")
+    user_id = request.user_id
+
+    if not applicant_name or not applicant_file or not desired_keywords_string:
+        return jsonify({'error': 'One or more fields are empty.'}), 400
 
     if not is_pdf_file(applicant_file):
-         return jsonify({'error': 'Only PDF files are allowed.'}), 400
+         return jsonify({'error': 'You did not send a pdf file.'}), 400
 
     #processing data to fill db
     desired_keywords = process_keywords(desired_keywords_string)
@@ -36,7 +30,8 @@ def add_applicant():
     document = {
         "applicant_name":applicant_name, 
         "applicant_score": applicant_score, 
-        "applicant_keywords":applicant_keywords
+        "applicant_keywords":applicant_keywords,
+        "user_id":user_id
     }
 
     collection.insert_one(document)
@@ -45,11 +40,9 @@ def add_applicant():
 
 
 @app.route('/applicants', methods=['GET'])
+@require_auth
 def get_applicants():
-    data = list(collection.find().sort("applicant_score",-1).limit(10))
+    user_id = request.user_id
+    data = list(collection.find({"user_id":user_id}).sort("applicant_score",-1).limit(10))
     documents = dumps(data)
     return documents
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

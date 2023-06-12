@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import  axios  from 'axios';
 import { useLeaderboardContext } from '../Hooks/useLeaderboardContext'
+import { useAuthContext } from '../Hooks/useAuthContext';
 
 export const Form = () => {
     const { dispatch } = useLeaderboardContext();
@@ -8,36 +8,47 @@ export const Form = () => {
     const [keywords,setKeywords] = useState('');
     const [file,setFile] = useState('');
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const {user} = useAuthContext();
 
     const emptyFields = () => {
       setFile('')
       setName('')
     }
 
-
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        setError(null);
+    const handleFormSubmit = async(e) => {
+        e.preventDefault();
+        if(!user){
+          setError('You must be logged in')
+          return
+        }
         const formData = new FormData();
         formData.append('name', name);
         formData.append('keywords', keywords);
         formData.append('file', file);
-    
-        axios.post(`${process.env.REACT_APP_API_ADD_APPLICANT_URL}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-          .then(response => {
-            console.log(response.data);
-            dispatch({type:'ADD_APPLICANT', payload:response.data})
-            emptyFields();
-          })
-          .catch(error => {
-            console.error(error);
-            setError(error);
-          });
-      };
+
+        setIsLoading(true);
+
+        const response = await fetch(`${process.env.REACT_APP_API_URL}add-applicant`,{
+          method: 'POST',
+			    body: formData,
+			    headers: {
+			      'Authorization': `Bearer ${user.token}`
+			    }
+      })
+      const json = await response.json()
+
+      if (!response.ok) {
+        setError(json.error)
+        setIsLoading(false)
+      }
+      if (response.ok) {
+        emptyFields();
+        setError(null)
+        setIsLoading(false);
+        dispatch({type:'ADD_APPLICANT', payload:json})
+      }
+    }
 
     return(
         <div className="sm:max-w-lg m-auto w-full p-2 bg-white rounded-xl z-10">
@@ -71,7 +82,8 @@ export const Form = () => {
                 file:py-3 file:px-4
                 dark:file:bg-gray-700 dark:file:text-gray-400"/>
             <p className='font-light pt-4'> Only PDFs allowed</p>
-            {error && (<p className='font-light pt-4 text-red-400'> The file you sent was not a PDF</p>)}
+            {isLoading && (<p className='font-light pt-4'> Loading...</p>)}
+            {error && (<p className='font-light pt-4 text-red-400'> {error}</p>)}
             </div>
           <div>
             <button
