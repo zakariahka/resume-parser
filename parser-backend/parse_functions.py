@@ -6,6 +6,7 @@ import PyPDF2
 import filetype
 
 nltk.download('punkt')
+nltk.download('stopwords')
 
 def is_pdf_file(file):
     header = file.read(261)
