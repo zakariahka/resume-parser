@@ -36,13 +36,13 @@ export const Leaderboard = () => {
     return(
         <div className = "m-2">
             {leaderboard.length > 0 && <h1 className="text-center text-5xl font-bold mb-10">Top 10 Applicants</h1>}
-            <input
+            {leaderboard.length > 0 && <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className=" md:w-1/3 w-3/4 text-base p-2 mb-8 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
               type="text"
               placeholder="Search your leaderboard"
-            />
+            />}
             <div className="flex grid justify-items-center align-center">
                 {leaderboard && filteredApplicants.map(applicant => (
                     <LeaderboardCard key={applicant._id} applicant = {applicant}/>
