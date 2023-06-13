@@ -5,6 +5,8 @@ from collections import Counter
 import PyPDF2
 import filetype
 
+nltk.download('punkt')
+
 def is_pdf_file(file):
     header = file.read(261)
     file_type = filetype.guess(header)
