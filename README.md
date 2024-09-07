@@ -2,4 +2,4 @@
 
 Stack used: React, Tailwind, Flask, MongoDB
 
-Deployed Site: https://resume-parser-project.vercel.app/signin
+Deployed Site: https://resume-parser-project.vercel.app/signin 

@@ -32,17 +32,13 @@ def process_keywords(keywords_string):
     return keywords
 
 def extract_programming_keywords(resume_text,desired_keywords,num_keywords=10,):
-    # Tokenize the resume text
     tokens = word_tokenize(resume_text.lower())
 
-    # Remove stop words
     stop_words = set(stopwords.words('english'))
     tokens = [token for token in tokens if token.isalpha() and token not in stop_words]
 
-    # Filter tokens to include only programming terms
     programming_tokens = [token for token in tokens if token in desired_keywords]
 
-    # Extract top keywords
     top_keywords = list(set(programming_tokens))[:num_keywords]
 
     return top_keywords

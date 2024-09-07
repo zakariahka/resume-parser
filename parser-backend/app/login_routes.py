@@ -25,8 +25,6 @@ def register():
     email = request.get_json().get("email")
     password = request.get_json().get("password")
 
-    #validation + bcrpyt
-
     if not email or not password:
         return jsonify({'error': 'Fields should not be empty'}), 400
     
@@ -48,8 +46,6 @@ def register():
     salt = gensalt(10)
     hashed_password = hashpw(encoded_password,salt)
 
-    #validation + bcrypt
-
     user = {
         "email":email,
         "password":hashed_password,
@@ -61,8 +57,6 @@ def register():
     token = create_token(str(serialized_user_id['$oid']))
 
     return jsonify({"email": email, "token": token}), 200
-
-
 
 @app.route('/login', methods = ["POST"])
 def login():
@@ -90,3 +84,21 @@ def login():
     token = create_token(user_id)
 
     return jsonify({"email": email, "token": token}), 200
+
+@app.route('/test-db-connection', methods=["GET"])
+def test_db_connection():
+    try:
+        # Perform a simple query to check if connection is successful
+        # For example, count the documents in the 'users' collection
+        user_count = users.count_documents({})
+        return jsonify({
+            "status": "success",
+            "message": "Successfully connected to MongoDB",
+            "user_count": user_count
+        }), 200
+    except Exception as e:
+        # Catch any exception and return an error message
+        return jsonify({
+            "status": "fail",
+            "message": f"Failed to connect to MongoDB: {str(e)}"
+        }), 500
