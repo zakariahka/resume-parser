@@ -6,7 +6,7 @@ export const useLogout = () => {
     const { dispatch: leaderboardDispatch } = useLeaderboardContext()
 
     const logout = () => {
-        //remove user from local storage
+        
         localStorage.removeItem('user')
         dispatch({type:'LOGOUT'})
 
