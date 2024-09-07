@@ -6,12 +6,12 @@ load_dotenv()
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 connection_string = os.getenv("MONGODB_URI")
 client = MongoClient(connection_string)
 
-db = client['resume-parser-db']
+db = client['parsume']
 collection = db.applicants
 users = db.users
 

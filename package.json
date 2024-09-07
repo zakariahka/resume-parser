@@ -1,0 +1,11 @@
+{
+  "name": "resume-parser",
+  "version": "1.0.0",
+  "description": "Stack used: React, Tailwind, Flask, MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

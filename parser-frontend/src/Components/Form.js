@@ -29,7 +29,7 @@ export const Form = () => {
 
         setIsLoading(true);
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}add-applicant`,{
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/add-applicant`,{
           method: 'POST',
 			    body: formData,
 			    headers: {
