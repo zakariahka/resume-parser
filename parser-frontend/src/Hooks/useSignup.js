@@ -7,8 +7,10 @@ export const useSignup = () => {
     const { dispatch } = useAuthContext();
 
     const signup = async(email, password) => {
+        console.log()
         setIsLoading(true)
         setError(null)
+        console.log("REACT_APP_API_URL:", process.env.REACT_APP_API_URL)
     
             const response = await fetch(`${process.env.REACT_APP_API_URL}/register`, {
                 method:'POST',
