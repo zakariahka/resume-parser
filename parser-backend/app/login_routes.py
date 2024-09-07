@@ -25,8 +25,6 @@ def register():
     email = request.get_json().get("email")
     password = request.get_json().get("password")
 
-    #validation + bcrpyt
-
     if not email or not password:
         return jsonify({'error': 'Fields should not be empty'}), 400
     
@@ -61,8 +59,6 @@ def register():
     token = create_token(str(serialized_user_id['$oid']))
 
     return jsonify({"email": email, "token": token}), 200
-
-
 
 @app.route('/login', methods = ["POST"])
 def login():

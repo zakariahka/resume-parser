@@ -8,7 +8,7 @@ from auth import require_auth
 @app.route('/add-applicant', methods=['POST'])
 @require_auth
 def add_applicant():
-    #get the file and fields from the request
+    
     applicant_name = request.form.get("name")
     applicant_file = request.files.get("file")
     desired_keywords_string = request.form.get("keywords")
@@ -20,13 +20,11 @@ def add_applicant():
     if not is_pdf_file(applicant_file):
          return jsonify({'error': 'You did not send a pdf file.'}), 400
 
-    #processing data to fill db
     desired_keywords = process_keywords(desired_keywords_string)
     applicant_resume_text = extract_text_from_pdf(applicant_file)
     applicant_keywords = extract_programming_keywords(applicant_resume_text, desired_keywords)
     applicant_score = resume_score_calc(desired_keywords, applicant_keywords)
 
-    #creating the JSON
     document = {
         "applicant_name":applicant_name, 
         "applicant_score": applicant_score, 
