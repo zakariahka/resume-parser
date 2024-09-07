@@ -59,7 +59,7 @@ export const Form = () => {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="text-base p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+              className="text-base p-2 border text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
               type="text"
               placeholder="Enter the name of the applicant"
             />
@@ -69,7 +69,7 @@ export const Form = () => {
             <input
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              className="text-base p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+              className="text-base p-2 border border-gray-300 text-gray-500 rounded-lg focus:outline-none focus:border-indigo-500"
               type="text"
               placeholder="Separate by commas"
             />
@@ -81,7 +81,7 @@ export const Form = () => {
                 file:bg-gray-100 file:mr-4
                 file:py-3 file:px-4
                 dark:file:bg-gray-700 dark:file:text-gray-400"/>
-            <p className='font-light pt-4'> Only PDFs allowed</p>
+            <p className='font-light pt-4 text-gray-500'> Only PDFs allowed</p>
             {isLoading && (<p className='font-light pt-4'> Loading...</p>)}
             {error && (<p className='font-light pt-4 text-red-400'> {error}</p>)}
             </div>
