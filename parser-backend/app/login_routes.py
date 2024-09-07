@@ -19,13 +19,15 @@ def create_token(user_id):
     access_token = create_access_token(identity=user_id)
     return access_token
 
+@app.route('/')
+def home():
+    return "Backend is running!", 200
+
 @app.route('/register', methods = ["POST"])
 def register():
     
     email = request.get_json().get("email")
     password = request.get_json().get("password")
-
-    #validation + bcrpyt
 
     if not email or not password:
         return jsonify({'error': 'Fields should not be empty'}), 400
@@ -48,8 +50,6 @@ def register():
     salt = gensalt(10)
     hashed_password = hashpw(encoded_password,salt)
 
-    #validation + bcrypt
-
     user = {
         "email":email,
         "password":hashed_password,
@@ -61,8 +61,6 @@ def register():
     token = create_token(str(serialized_user_id['$oid']))
 
     return jsonify({"email": email, "token": token}), 200
-
-
 
 @app.route('/login', methods = ["POST"])
 def login():
